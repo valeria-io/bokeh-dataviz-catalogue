@@ -12,7 +12,7 @@ df_melt = df.melt(id_vars=['IntervationName', 'Profit'],
                   var_name='GroupName',
                   value_name='TruePositiveRate')
 
-output_file("index.html")
+output_file("../docs/index.html")
 
 p_mandatory = plot_dual_axis_dual_bar_line(
     df=df_melt,
