@@ -16,9 +16,9 @@ Each folder contains a working version of a chart. You can always decide to edit
  
 ## Graphs Catalogue
  
- |[Dual bar and line chart](https://github.com/valeria-io/bokeh-vis-functions/tree/master/dual_axis_bar_line_plot) |
- | --- |
- |![dual_axis_multiple_bar_line_chart_basic text](./dual_axis_bar_line_plot/images/dual_axis_multiple_bar_line_chart_basic.png)|
+ |[Dual bar and line chart](https://github.com/valeria-io/bokeh-vis-functions/tree/master/dual_axis_bar_line_plot) | [Multiple bar chart]()|
+ | --- | ---|
+ |![dual_axis_multiple_bar_line_chart_basic text](static/images/dual_axis_multiple_bar_line_chart_basic.png)| ![multiple_bar_chart text](static/images/multiple_bar_chart_basic.png)|
  
  
 ## Contact
