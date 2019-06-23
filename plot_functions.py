@@ -176,6 +176,52 @@ def plot_dual_axis_dual_bar_line(
     return p
 
 
+def plot_multiple_bar_chart(df, title, x_axis, y_axis, x_axis_categories,
+                            md_color_shade='lightblue', plot_width=800, plot_height=500,
+                            **kwargs):
+    custom_hover = HoverTool()
+
+    colours = create_multi_colour_pallete(md_color_shade)
+
+    if (x_axis in df.index.names) | (y_axis in df.index.names):
+        df.reset_index(inplace=True)
+
+    df_pivot = df.pivot(index=x_axis, columns=x_axis_categories, values=y_axis)
+
+    x = [(x_ind, y_ind) for x_ind in df_pivot.index.map(str) for y_ind in df_pivot.columns.map(str)]
+
+    df_pivot_as_list = [item for sublist in df_pivot.as_matrix() for item in sublist]
+
+    palette = colours[0:len(df_pivot.columns)] * len(df_pivot.index)
+
+    source = ColumnDataSource(data=dict(x=x, y=df_pivot_as_list, palette=palette))
+
+    p = figure(x_range=FactorRange(*x), title=title, plot_width=plot_width, plot_height=plot_height,
+               tools=[custom_hover, 'save'])
+
+    if len(colours) < len(df_pivot.columns):
+        raise IndexError("""There are more categories ({} categories) than colours ({} colours). 
+                            Increase number of colours or reduce category number.""".format(len(df_pivot.columns),
+                                                                                            len(colours)))
+
+    p.vbar(x='x', top='y', fill_color='palette', source=source, width=0.9, line_color="white", )
+
+    p.xaxis.major_label_orientation = 1
+    p.xgrid.grid_line_color = None
+
+    tooltips = [('{},{}'.format(x_axis, x_axis_categories), "@x"),
+                (y_axis, "@y" + kwargs.get('y_tooltip_format', ''))]
+    custom_hover.tooltips = get_custom_hover_tooltips(tooltips)
+
+    p.add_tools(custom_hover)
+
+    p.yaxis.formatter = NumeralTickFormatter(format=kwargs.get('y_axis_format', "0.0a"))
+
+    p.x_range.range_padding = 0.1
+
+    return p
+
+
 def format_axis(p: figure, **kwargs) -> figure:
     p.yaxis[0].formatter = NumeralTickFormatter(format=kwargs.get("y_num_tick_formatter", '0.0'))
     p.x_range.range_padding = kwargs.get("x_range_padding", 0.1)
