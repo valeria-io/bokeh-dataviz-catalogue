@@ -24,10 +24,6 @@ from bokeh.models.widgets import DataTable, HTMLTemplateFormatter, TableColumn, 
 from bokeh.layouts import widgetbox, Column
 
 
-
-
-
-
 def plot_dual_axis_dual_bar_line(
         df: pd.DataFrame,
         title: str,
