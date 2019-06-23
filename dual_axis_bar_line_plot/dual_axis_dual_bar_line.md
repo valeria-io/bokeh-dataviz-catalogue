@@ -13,7 +13,6 @@ df_melt = df.melt(id_vars=['IntervationName', 'Profit'],
                   var_name='GroupName',
                   value_name='TruePositiveRate')
 
-#output_file("index.html")
 output_pweave()
 
 p_mandatory = plot_dual_axis_dual_bar_line(
@@ -65,7 +64,7 @@ text_table = Div(
 text_function_mandatory = Div(
     text="""
     <h2 style='margin-block-end:0'>Graph 1: Function with mandatory parameters</h2>
-    <p style="font-family: 'Helvetica Neue', Arial"> Obligatory parameters are: title, group name for the x axis, the 
+    <p style="font-family: 'Helvetica Neue', Arial"> Obligatory parameters are: title, group name for the x axis, the
     column name for the bar variables, the column name for the line and the names for the left and right axis values.
     </p>
     <br>
@@ -105,7 +104,7 @@ text_function_mandatory = Div(
                 <span style="color:#8c9eff">line_variable_name =</span>
                 "Profit"<span style='color: #ff9100'>,</span>
                 <span style='color: #9e9e9e'> #str </span>
-            </li>        
+            </li>
         </ul>
         <span style='font-family: courier; font-weight: 600; color: #e0e0e0'>)</span>
         <br><br>
@@ -122,7 +121,7 @@ text_mandatory = Div(
 
 sep_text = Div(
     text="""
-    <div style='border-bottom-style: solid;  border-bottom-width: 2px; width:1590px; height:2px; 
+    <div style='border-bottom-style: solid;  border-bottom-width: 2px; width:1590px; height:2px;
     border-bottom-color: #cfcfcf'>
     </div>
     """, width=1590
@@ -273,6 +272,4 @@ show(
         )
     )
 )
-
-
 
