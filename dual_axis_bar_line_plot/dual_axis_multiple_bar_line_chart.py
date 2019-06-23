@@ -1,9 +1,8 @@
 import pandas as pd
-from bokeh.plotting import output_file
+from bokeh.plotting import output_file, show
 from bokeh.layouts import Column, Row, layout
 from plot_functions import plot_dual_axis_dual_bar_line, plot_table
 from bokeh.models.widgets import Div
-from pweave.bokeh import output_pweave, show
 
 df = pd.read_csv('../static/data/max_profit_by_age_group.csv', index_col=[0]).rename(
     columns={'TruePositiveRate0': '+ 40', 'TruePositiveRate1': '< 40'})
@@ -13,8 +12,7 @@ df_melt = df.melt(id_vars=['IntervationName', 'Profit'],
                   var_name='GroupName',
                   value_name='TruePositiveRate')
 
-#output_file("index.html")
-output_pweave()
+output_file("dual_axis_multiple_bar_line_chart.html")
 
 p_mandatory = plot_dual_axis_dual_bar_line(
     df=df_melt,
@@ -185,7 +183,7 @@ text_function_optional = Div(
             <li style='list-style-type : none'>
                 <span style='color: #8c9eff'>line_colour</span>
                 <span> = </span>
-                <span>"#ff9800</span>
+                <span>"#ff9800"</span>
                 <span style='color: #ff9100'>,</span>
                 <span style='color: #9e9e9e'> #str </span>
             </li>
@@ -256,6 +254,9 @@ text_optional = Div(
     <h2 style='margin-block-end:0'> Graph 2: Using additional and optional function parameters</h2><br><br>
     """
     , width=700)
+
+from tabulate import tabulate
+print(tabulate(df_melt[['IntervationName', 'Profit', 'GroupName', 'TruePositiveRate']], tablefmt="github", headers="keys", showindex=False))
 
 
 show(
