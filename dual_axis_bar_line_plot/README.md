@@ -15,7 +15,7 @@ plot_dual_axis_dual_bar_line(
 
 _To observe the hover functionality, download the HTML page and open in your browser._
 
-![dual_axis_multiple_bar_line_chart_basic text](./images/dual_axis_multiple_bar_line_chart_basic.png)
+![dual_axis_multiple_bar_line_chart_basic text](../static/images/dual_axis_multiple_bar_line_chart_basic.png)
 
 ### Data used in graph
 
@@ -58,7 +58,7 @@ plot_dual_axis_dual_bar_line(
 ```
 _To observe the hover functionality, download the HTML page and open in your browser._
 
-![dual_axis_multiple_bar_line_chart_extended](./images/dual_axis_multiple_bar_line_chart_extended.png)
+![dual_axis_multiple_bar_line_chart_extended](../static/images/dual_axis_multiple_bar_line_chart_extended.png)
 
 As before, the same table was used:
 
