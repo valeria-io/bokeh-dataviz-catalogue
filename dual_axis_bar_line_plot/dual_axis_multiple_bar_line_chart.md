@@ -17,6 +17,8 @@ _To observe the hover functionality, download the HTML page and open in your bro
 
 ![dual_axis_multiple_bar_line_chart_basic text](./images/dual_axis_multiple_bar_line_chart_basic.png)
 
+### Data used in graph
+
 | IntervationName   |   Profit | GroupName   |   TruePositiveRate |
 |-------------------|----------|-------------|--------------------|
 | MaxProfit         |      790 | + 40        |               0.54 |
@@ -59,6 +61,9 @@ _To observe the hover functionality, download the HTML page and open in your bro
 ![dual_axis_multiple_bar_line_chart_extended](./images/dual_axis_multiple_bar_line_chart_extended.png)
 
 As before, the same table was used:
+
+### Data used in graph
+
 
 | IntervationName   |   Profit | GroupName   |   TruePositiveRate |
 |-------------------|----------|-------------|--------------------|
