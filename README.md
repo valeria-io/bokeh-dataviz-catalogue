@@ -22,8 +22,10 @@ Each folder contains a working version of a chart. You can always decide to edit
  
  
 ## Contact
+
 - Valeria Cortez, [me@valeria.io](https://twitter.com/ValeriaCortezVD)
 - [@ValeriaCortezVD](https://twitter.com/ValeriaCortezVD) on Twitter
 
 ## References
+
 - [Bokeh library](https://bokeh.pydata.org/en/latest/)
