@@ -2,7 +2,7 @@
 
 You can copy-paste the file `plot_functions.py` into your project to import and use any of the existing plotting functions.
 
-## Instructions
+## Instructions
 
 Download this repo as ZIP file (or git clone it).
 
@@ -14,7 +14,7 @@ Each folder contains a working version of a chart. You can always decide to edit
  All plot functions are available in `plot_functions.py`, which can be added, edited and re-used in any of your 
  projects.
  
- ## Graphs Catalogue
+## Graphs Catalogue
  
  |[Dual bar and line chart](https://github.com/valeria-io/bokeh-vis-functions/tree/master/dual_axis_bar_line_plot) |
  | --- |
