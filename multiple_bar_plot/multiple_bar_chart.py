@@ -1,7 +1,7 @@
 import pandas as pd
 from bokeh.plotting import output_file, show
 from bokeh.layouts import Column, Row, layout
-from plot_functions import plot_multiple_bar_chart
+from plot_functions import plot_multiple_bar_chart, plot_table
 from bokeh.models.widgets import Div
 
 
@@ -36,19 +36,32 @@ p_optional = plot_multiple_bar_chart(
     show_legend=True
 )
 
-# show(
-#     layout(
-#         Row(
-#             Column(p_mandatory)
-#         ),
-#         Row(
-#             Column(p_optional)
-#         )
-#     )
-# )
+data_table = plot_table(
+    df
+)
 
-from tabulate import tabulate
-df_ = df.copy()
-df_['sales'] = df_['sales'].map('{:,.0f}'.format)
+text_mandatory = Div(
+    text="""
+    <h2 style='margin-block-end:0'> Graph 1: Using mandatory parameters only </h2>
+    """
+)
+text_optional= Div(
+    text="""
+    <h2 style='margin-block-end:0'> Graph 2: Using additional and optional function parameters </h2>
+    """
+)
+text_table = Div(
+    text="""
+    <h2 style='margin-block-end:0'> Data used in graph</h2>
+    <span style='color: #616161'><i>Scrollable table</i></span>
+    """
+)
 
-print(tabulate(df_, tablefmt="github", headers="keys", showindex=False))
+show(
+    layout(
+        Column(text_mandatory, p_mandatory, text_optional, p_optional, text_table, data_table)
+    )
+)
+
+
+#print(tabulate(df_, tablefmt="github", headers="keys", showindex=False))

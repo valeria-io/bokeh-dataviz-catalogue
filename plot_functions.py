@@ -289,7 +289,7 @@ def get_custom_hover_tooltips(tooltips):
 def plot_table(df,
                header_style="color: #757575; font-family: Courier; font-weight:800",
                table_style="color: #757575; font-family: Courier; font-weight:normal",
-               height=120):
+               height=250):
 
     source = ColumnDataSource(df)
 
