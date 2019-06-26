@@ -253,11 +253,8 @@ text_optional = Div(
     text="""
     <h2 style='margin-block-end:0'> Graph 2: Using additional and optional function parameters</h2><br><br>
     """
-    , width=700)
-
-from tabulate import tabulate
-print(tabulate(df_melt[['IntervationName', 'Profit', 'GroupName', 'TruePositiveRate']], tablefmt="github", headers="keys", showindex=False))
-
+    , width=700
+)
 
 show(
     layout(

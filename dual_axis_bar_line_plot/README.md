@@ -1,6 +1,7 @@
 ## Graph 1: Function with mandatory parameters
 
-Obligatory parameters are: title, group name for the x axis, the column name for the bar variables, the column name for the line and the names for the left and right axis values.
+Obligatory parameters are: dataframe, title, group name for the x axis, the column name for the bar variables, the 
+column name for the line and the names for the left and right axis values.
 
 ```python
 plot_dual_axis_dual_bar_line(
@@ -54,8 +55,15 @@ plot_dual_axis_dual_bar_line(
     bar_tooltip_format = '{0 %}', #str
     legend_location = (10, 10), #Tuple(int, int)
     legend_placement = "right", #str
+    x_range_padding = 0.1, #float
+    x_label_orientation = 1.0, #float
+    grid_line_colour = None
 )
 ```
+_Find in this [link](https://bokeh.pydata.org/en/latest/docs/reference/models/formatters.html#bokeh.models.formatters.NumeralTickFormatter) 
+the different numerical formats you can use for `y_num_tick_formatter` and `bar_tooltip_format` 
+(this last one needs to be in brackets, e.g: `{0 %}}`)
+
 _To observe the hover functionality, download the HTML page and open in your browser._
 
 ![dual_axis_multiple_bar_line_chart_extended](../static/images/dual_axis_multiple_bar_line_chart_extended.png)
