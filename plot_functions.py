@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import warnings
 import calendar
 import matplotlib.pyplot as plt
 
@@ -149,7 +150,9 @@ def plot_dual_axis_dual_bar_line(
     """ Assigns tooltips """
     tooltips_bar = [
         (kwargs.get('x_tooltip_name', 'Group'), '@x'),
-        (kwargs.get('bar_tooltip_name', left_axis_y_label), '@bar_values' + kwargs.get('bar_tooltip_format', '')),
+        (kwargs.get('bar_tooltip_name', left_axis_y_label),
+         '@bar_values' + kwargs.get('bar_tooltip_format', '')
+         ),
         (kwargs.get('line_tooltip_name', right_axis_y_label), '@line_values' + kwargs.get('line_tooltip_format', ''))
     ]
     hover_bar.tooltips = get_custom_hover_tooltips(tooltips_bar)
@@ -176,13 +179,9 @@ def plot_dual_axis_dual_bar_line(
     return p
 
 
-def plot_multiple_bar_chart(df, title, x_axis, y_axis, x_axis_categories,
-                            md_color_shade='lightblue', plot_width=800, plot_height=500,
+def plot_multiple_bar_chart(df, title, x_axis, y_axis, x_axis_categories, md_color_shade='lightblue', show_legend=False,
                             **kwargs):
-    custom_hover = HoverTool()
-
-    colours = create_multi_colour_pallete(md_color_shade)
-
+    """ prepare data """
     if (x_axis in df.index.names) | (y_axis in df.index.names):
         df.reset_index(inplace=True)
 
@@ -192,32 +191,71 @@ def plot_multiple_bar_chart(df, title, x_axis, y_axis, x_axis_categories,
 
     df_pivot_as_list = [item for sublist in df_pivot.as_matrix() for item in sublist]
 
+    """ colours """
+    try:
+        colours = create_multi_colour_pallete(md_color_shade)
+    except KeyError:
+        md_colour_names = get_material_design_colours().keys()
+        warnings.warn(
+            """{} is not in the colour palette of Material Design. Select one of the following colours:\n{}"""
+                .format(md_color_shade, ', '.join(md_colour_names))
+        )
+        colours = create_multi_colour_pallete('lightblue')
+
     palette = colours[0:len(df_pivot.columns)] * len(df_pivot.index)
 
+    """ bar chart """
     source = ColumnDataSource(data=dict(x=x, y=df_pivot_as_list, palette=palette))
 
-    p = figure(x_range=FactorRange(*x), title=title, plot_width=plot_width, plot_height=plot_height,
-               tools=[custom_hover, 'save'])
+    custom_hover = HoverTool()
+
+    p = figure(
+        x_range=FactorRange(*x),
+        title=title,
+        plot_width=kwargs.get('plot_width', 700),
+        plot_height=kwargs.get('plot_height', 400),
+        tools=[custom_hover, 'save'])
 
     if len(colours) < len(df_pivot.columns):
         raise IndexError("""There are more categories ({} categories) than colours ({} colours). 
                             Increase number of colours or reduce category number.""".format(len(df_pivot.columns),
                                                                                             len(colours)))
+    bar_chart = p.vbar(
+        x='x',
+        top='y',
+        fill_color='palette',
+        source=source,
+        width=kwargs.get('bar_width', 0.9),
+        line_color="white",
+    )
 
-    p.vbar(x='x', top='y', fill_color='palette', source=source, width=0.9, line_color="white", )
-
-    p.xaxis.major_label_orientation = 1
-    p.xgrid.grid_line_color = None
-
-    tooltips = [('{},{}'.format(x_axis, x_axis_categories), "@x"),
-                (y_axis, "@y" + kwargs.get('y_tooltip_format', ''))]
+    """ tooltips """
+    tooltips = [
+        ('{},{}'.format(x_axis, x_axis_categories), "@x"),
+        (y_axis, "@y" + kwargs.get('y_tooltip_format', ''))
+    ]
     custom_hover.tooltips = get_custom_hover_tooltips(tooltips)
 
     p.add_tools(custom_hover)
 
-    p.yaxis.formatter = NumeralTickFormatter(format=kwargs.get('y_axis_format', "0.0a"))
+    """ axis """
+    y_axis_label = kwargs.get('y_axis_label', y_axis)
+    x_axis_label = kwargs.get('x_axis_label', x_axis)
+    x_category_label = kwargs.get('x_categories', x_axis_categories)
 
-    p.x_range.range_padding = 0.1
+    p.xaxis.axis_label = '{} by {}'.format(x_category_label, x_axis_label)
+    p.yaxis.axis_label = y_axis_label
+    p = format_axis(p, **kwargs)
+    p = format_grid(p, **kwargs)
+
+    """ legend """
+    if show_legend:
+        bar_variables = df[x_axis_categories].unique()
+        legend = Legend(items=[
+            LegendItem(label=x_category_label + ': ' + bar_variables[i].astype(str), renderers=[bar_chart], index=i) for i in range(len(bar_variables))
+        ], location=kwargs.get('legend_location', (0, 0)))
+
+        p.add_layout(legend, kwargs.get('legend_placement', 'right'))
 
     return p
 

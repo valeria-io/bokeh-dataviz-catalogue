@@ -14,11 +14,11 @@ Each folder contains a working version of a chart. You can always decide to edit
  All plot functions are available in `plot_functions.py`, which can be added, edited and re-used in any of your 
  projects.
  
-## Graphs Catalogue
+## Catalogue
  
  |[Dual bar and line chart](https://github.com/valeria-io/bokeh-vis-functions/tree/master/dual_axis_bar_line_plot) | [Multiple bar chart](https://github.com/valeria-io/bokeh-dataviz-catalogue/tree/master/multiple_bar_plot)|
  | --- | ---|
- |![dual_axis_multiple_bar_line_chart_basic text](static/images/dual_axis_multiple_bar_line_chart_basic.png)| ![multiple_bar_chart text](static/images/multiple_bar_chart_basic.png)|
+ |![dual_axis_multiple_bar_line_chart_basic text](static/images/dual_axis_multiple_bar_line_chart_extended.png)| ![multiple_bar_chart text](static/images/multiple_bar_chart_basic.png)|
  
  
 ## Contact
