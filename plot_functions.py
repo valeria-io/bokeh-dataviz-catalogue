@@ -30,7 +30,7 @@ def plot_dual_axis_dual_bar_line(
         title: str,
         groups_name: str,
         bar_value_name: str,
-        bar_variable_name: list,
+        bar_variable_name: str,
         line_variable_name: str,
         **kwargs
 ) -> figure:
@@ -124,8 +124,8 @@ def plot_dual_axis_dual_bar_line(
     max_bar_value = df1[bar_value_name].max()
 
     p.y_range = Range1d(
-        kwargs.get('min_left_y_range', min(0, min_bar_value*1.1, min_bar_value*0.9)),
-        kwargs.get('max_left_y_range', max(0, max_bar_value*1.1, max_bar_value*0.9)),
+        kwargs.get('min_left_y_range', min(0, min_bar_value * 1.1, min_bar_value * 0.9)),
+        kwargs.get('max_left_y_range', max(0, max_bar_value * 1.1, max_bar_value * 0.9)),
 
     )
     left_axis_y_label = kwargs.get('left_axis_y_label', bar_value_name)
@@ -137,8 +137,8 @@ def plot_dual_axis_dual_bar_line(
 
     p.extra_y_ranges = {
         right_axis_y_label: Range1d(
-            start=kwargs.get('min_right_y_range', min(min_line_value*1.1, min_line_value*0.9)),
-            end=kwargs.get('max_right_y_range', max(max_line_value*1.1, max_line_value*0.9)),
+            start=kwargs.get('min_right_y_range', min(min_line_value * 1.1, min_line_value * 0.9)),
+            end=kwargs.get('max_right_y_range', max(max_line_value * 1.1, max_line_value * 0.9)),
         )
     }
     p.add_layout(LinearAxis(y_range_name=right_axis_y_label, axis_label=right_axis_y_label), 'right')
@@ -175,12 +175,24 @@ def plot_dual_axis_dual_bar_line(
 
     p.add_layout(legend, kwargs.get('legend_placement', 'below'))
 
-
     return p
 
 
-def plot_multiple_bar_chart(df, title, x_axis, y_axis, x_axis_categories, md_color_shade='lightblue', show_legend=False,
-                            **kwargs):
+def plot_multiple_bar_chart(df: pd.DataFrame, title: str, x_axis: str, y_axis: str, x_axis_categories: str,
+                            md_color_shade: str = 'lightblue', show_legend: bool = False, **kwargs) -> figure:
+    """
+    Creates a Bokeh multiple bar chart
+
+    :param df: dataframe with the x and y values
+    :param title: title for figure
+    :param x_axis: column name in df used for the x axis
+    :param y_axis: column name in df used for the y axis
+    :param x_axis_categories: column name in df used to assign x axis categories
+    :param md_color_shade: the colour name used by Material Design
+    :param show_legend: if legend should be shown
+    :param kwargs: extra information
+    :return: Bokeh figure with multiple bar chart
+    """
     """ prepare data """
     if (x_axis in df.index.names) | (y_axis in df.index.names):
         df.reset_index(inplace=True)
@@ -261,8 +273,24 @@ def plot_multiple_bar_chart(df, title, x_axis, y_axis, x_axis_categories, md_col
     return p
 
 
-def plot_single_line(df, x_axis, y_axis, title, x_axis_type='datetime', colour_name='blue', colour_code='500',
-                     md_design_colour=True, show_legend=False, **kwargs):
+def plot_single_line(df: pd.DataFrame, x_axis: str, y_axis: str, title: str, x_axis_type: str = 'datetime',
+                     colour_name: str = 'blue', colour_code: str = '500', md_design_colour: bool = True,
+                     show_legend: bool = False, **kwargs) -> figure:
+    """
+    Creates a single line Bokeh chart
+
+    :param df: dataframe with the x and y values
+    :param x_axis: column name in df used for the x axis
+    :param y_axis: column name in df used for the y axis
+    :param title: title for figure
+    :param x_axis_type: if axis type is datetime or linear (default: datetime)
+    :param colour_name: colour name used by material design
+    :param colour_code: colour code used by material desgin
+    :param md_design_colour: if we should use Material Design's colours, otherwise a hex code can be passed in line_colour
+    :param show_legend: if legend should be shown
+    :param kwargs: extra information that can be passed
+    :return: Bokehfigure with line chart
+    """
     """ prepare data """
     if (x_axis in df.index.names) | (y_axis in df.index.names):
         df.reset_index(inplace=True)
@@ -276,7 +304,7 @@ def plot_single_line(df, x_axis, y_axis, title, x_axis_type='datetime', colour_n
     custom_hover = HoverTool()
 
     p = figure(x_axis_type=x_axis_type, title=title, plot_width=kwargs.get('plot_width', 700),
-                        plot_height=kwargs.get('plot_height', 350), tools=[custom_hover, 'save'])
+               plot_height=kwargs.get('plot_height', 350), tools=[custom_hover, 'save'])
 
     if md_design_colour:
         line_colour = get_colour_hex_code(
@@ -314,6 +342,72 @@ def plot_single_line(df, x_axis, y_axis, title, x_axis_type='datetime', colour_n
     return p
 
 
+# def plot_multiple_lines(df, x_axis, y_axis, category_column, title, x_axis_type='datetime', plot_width=1000,
+#                         plot_height=500, line_width=2, colours=create_multi_colour_pallete(), line_alpha=1, **kwargs):
+#     """Plots multiple lines.
+#
+#     Args:
+#         df (pd.DataFrame) -- dataframe to use
+#         x_axis (str) -- x axis of plot
+#         y_axis (str) -- y axis of plot
+#         x_axis_type (str) --  The type of the x-axis: datetime, linear, log, auto (default datetime)
+#         category column (str) -- column used to get the categories for multiple lines
+#         title (str) -- title used for the plot
+#         plot_width (int) -- width of plot (default 1000)
+#         plot_height (int) -- height of plot (default 500)
+#         line_width (int) -- width of lines (default 2)
+#
+#     Returns:
+#         bokeh plot figure
+#     """
+
+    custom_hover = HoverTool()
+
+    custom_hover.tooltips = get_custom_hover_tooltips()
+
+    if (x_axis in df.index.names) | (y_axis in df.index.names):
+        df.reset_index(inplace=True)
+
+    if len(colours) < len(df[category_column].unique()):
+        raise IndexError("""There are more categorical ({} categoreis) columns than there are colours ({} colours). 
+                            Reduce categories or add more colours.""".format(str(len(df[category_column].unique())),
+                                                                             str(len(colours))))
+
+    df[category_column] = df[category_column].apply(str)
+    df_pivoted = df.pivot(index=x_axis, columns=category_column, values=y_axis)
+
+    p = figure(x_axis_type=x_axis_type, title=title, plot_width=plot_width, plot_height=plot_height,
+               tools=[custom_hover, 'save'])
+
+    legend_list = []
+
+    source = ColumnDataSource(df_pivoted)
+
+    for ind, category_line in enumerate(df_pivoted.columns):
+        line_g = p.line(x_axis, category_line, source=source, line_width=line_width, color=colours[ind],
+                        line_alpha=line_alpha)
+        legend_list.append(LegendItem(label=category_line, renderers=[line_g]))
+
+    x_axis_default_format = '{%F, %A}' if x_axis_type == 'datetime' else ''
+
+    tooltips = [(x_axis, "@" + x_axis + kwargs.get('x_tooltip_format',
+                                                   x_axis_default_format))] + [("{} of {} {}"
+                                                                                .format(y_axis, category_column, y),
+                                                                                "@" + y + kwargs.
+                                                                                get('y_tooltip_format', '{0,0}'))
+                                                                               for y in df_pivoted.columns]
+    hover = p.select(dict(type=HoverTool))
+    hover.tooltips = tooltips
+    hover.formatters = {x_axis: x_axis_type}
+
+    p.yaxis.formatter = NumeralTickFormatter(format=kwargs.get('y_axis_format', "0.0a"))
+
+    legend = Legend(items=legend_list, location=(0, -30))
+
+    p.add_layout(legend, 'right')
+    return p
+
+
 def format_axis(p: figure, **kwargs) -> figure:
     p.yaxis[0].formatter = NumeralTickFormatter(format=kwargs.get("y_num_tick_formatter", '0.0'))
     p.x_range.range_padding = kwargs.get("x_range_padding", 0.1)
@@ -326,7 +420,7 @@ def format_grid(p: figure, **kwargs) -> figure:
     return p
 
 
-def get_custom_hover_tooltips(tooltips):
+def get_custom_hover_tooltips(tooltips: list) -> str:
     """ Function that forces only one hover tooltip to show at a time"""
     html_code = \
         """
@@ -344,7 +438,6 @@ def plot_table(df,
                header_style="color: #757575; font-family: Courier; font-weight:800",
                table_style="color: #757575; font-family: Courier; font-weight:normal",
                height=250):
-
     source = ColumnDataSource(df)
 
     header = Div(text="<style>.slick-header.ui-state-default{" + header_style + "}</style>")
@@ -371,6 +464,7 @@ def plot_table(df,
                            )
     return Column(header, widgetbox(data_table))
 
+
 def get_colour_hex_code(colour_name, colour_code):
     """
     Calls for the dictionary with colour and codes from Material Design and finds the right hex code based on colour
@@ -381,7 +475,6 @@ def get_colour_hex_code(colour_name, colour_code):
     """
     md_colour_dict = get_material_design_colours()
     return md_colour_dict[colour_name][colour_code]
-
 
 
 def create_multi_colour_pallete(colour_name: str = 'multi_colour', colour_number: str = '500') -> list:

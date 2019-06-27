@@ -62,7 +62,7 @@ plot_dual_axis_dual_bar_line(
 ```
 _Find in this [link](https://bokeh.pydata.org/en/latest/docs/reference/models/formatters.html#bokeh.models.formatters.NumeralTickFormatter) 
 the different numerical formats you can use for `y_num_tick_formatter` and `bar_tooltip_format` 
-(this last one needs to be in brackets, e.g: `{0 %}}`)
+(this last one needs to be in brackets, e.g: `{0 %}`)_
 
 _To observe the hover functionality, download the HTML page and open in your browser._
 

@@ -62,6 +62,3 @@ show(
         Column(text_mandatory, p_mandatory, text_optional, p_optional, text_table, data_table)
     )
 )
-
-
-#print(tabulate(df_, tablefmt="github", headers="keys", showindex=False))
