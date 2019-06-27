@@ -171,7 +171,7 @@ def plot_dual_axis_dual_bar_line(
         LegendItem(label=left_axis_y_label + ': ' + bar_variables[0], renderers=[bar_chart], index=0),
         LegendItem(label=left_axis_y_label + ': ' + bar_variables[1], renderers=[bar_chart], index=1),
         LegendItem(label=right_axis_y_label, renderers=[line_chart], index=0),
-    ], location=kwargs.get('legend_location', (0, 0)))
+    ], location=kwargs.get('legend_location', (10, 10)))
 
     p.add_layout(legend, kwargs.get('legend_placement', 'below'))
 
@@ -231,7 +231,7 @@ def plot_multiple_bar_chart(df, title, x_axis, y_axis, x_axis_categories, md_col
 
     """ tooltips """
     tooltips = [
-        ('{},{}'.format(x_axis, x_axis_categories), "@x"),
+        ('{},{}'.format(x_axis, x_axis_categories), "@x" + kwargs.get('x_tooltip_format', '')),
         (y_axis, "@y" + kwargs.get('y_tooltip_format', ''))
     ]
     custom_hover.tooltips = get_custom_hover_tooltips(tooltips)
@@ -252,10 +252,64 @@ def plot_multiple_bar_chart(df, title, x_axis, y_axis, x_axis_categories, md_col
     if show_legend:
         bar_variables = df[x_axis_categories].unique()
         legend = Legend(items=[
-            LegendItem(label=x_category_label + ': ' + bar_variables[i].astype(str), renderers=[bar_chart], index=i) for i in range(len(bar_variables))
-        ], location=kwargs.get('legend_location', (0, 0)))
+            LegendItem(label=x_category_label + ': ' + bar_variables[i].astype(str), renderers=[bar_chart], index=i)
+            for i in range(len(bar_variables))
+        ], location=kwargs.get('legend_location', (10, 10)))
 
         p.add_layout(legend, kwargs.get('legend_placement', 'right'))
+
+    return p
+
+
+def plot_single_line(df, x_axis, y_axis, title, x_axis_type='datetime', colour_name='blue', colour_code='500',
+                     md_design_colour=True, show_legend=False, **kwargs):
+    """ prepare data """
+    if (x_axis in df.index.names) | (y_axis in df.index.names):
+        df.reset_index(inplace=True)
+
+    if x_axis_type == 'datetime':
+        df = df.sort_values(x_axis, ascending=True)
+
+    source = ColumnDataSource(df)
+
+    """ line plot """
+    custom_hover = HoverTool()
+
+    p = figure(x_axis_type=x_axis_type, title=title, plot_width=kwargs.get('plot_width', 700),
+                        plot_height=kwargs.get('plot_height', 350), tools=[custom_hover, 'save'])
+
+    if md_design_colour:
+        line_colour = get_colour_hex_code(
+            colour_name,
+            colour_code
+        )
+    else:
+        line_colour = kwargs.get('line_colour', '#2196f3')
+
+    line_chart = p.line(x_axis, y_axis, line_width=kwargs.get('line_width', 1), color=line_colour, source=source)
+
+    """ tooltips """
+    x_axis_default_format = "{%F, %A}" if x_axis_type == 'datetime' else ''
+    tooltips = [(x_axis, "@" + x_axis + kwargs.get('x_tooltip_format', x_axis_default_format)),
+                (y_axis, "@" + y_axis + kwargs.get('y_tooltip_format', '{0,0}'))]
+    custom_hover.tooltips = get_custom_hover_tooltips(tooltips)
+    custom_hover.formatters = {x_axis: x_axis_type}
+    p.add_tools(custom_hover)
+
+    """ legend """
+    if show_legend:
+        legend = Legend(
+            items=[LegendItem(label=kwargs.get('y_axis_label', y_axis), renderers=[line_chart], index=0)],
+            location=kwargs.get('legend_location', (10, 10))
+        )
+
+        p.add_layout(legend, kwargs.get('legend_placement', 'below'))
+
+    """ axis """
+    p.xaxis.axis_label = kwargs.get('x_axis_label', x_axis)
+    p.yaxis.axis_label = kwargs.get('y_axis_label', y_axis)
+    p = format_axis(p, **kwargs)
+    p = format_grid(p, **kwargs)
 
     return p
 
@@ -316,6 +370,18 @@ def plot_table(df,
                            height=height
                            )
     return Column(header, widgetbox(data_table))
+
+def get_colour_hex_code(colour_name, colour_code):
+    """
+    Calls for the dictionary with colour and codes from Material Design and finds the right hex code based on colour
+    name name and colour code.
+    :param colour_name: name of MD colour #@todo: add names here
+    :param colour_code:  the number of the gradient colour. #@todo: add codes here
+    :return: hex code based on Material Design's colour name and colour code
+    """
+    md_colour_dict = get_material_design_colours()
+    return md_colour_dict[colour_name][colour_code]
+
 
 
 def create_multi_colour_pallete(colour_name: str = 'multi_colour', colour_number: str = '500') -> list:
