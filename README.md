@@ -19,7 +19,7 @@ Each folder contains a working version of a chart. You can always decide to edit
  |[Dual bar and line chart](https://github.com/valeria-io/bokeh-vis-functions/tree/master/dual_axis_bar_line_plot) | [Multiple bar chart](https://github.com/valeria-io/bokeh-dataviz-catalogue/tree/master/multiple_bar_plot)|
  | :---: | :---:|
  |![dual_axis_multiple_bar_line_chart_basic text](static/images/dual_axis_multiple_bar_line_chart_extended.png)| ![multiple_bar_chart text](static/images/multiple_bar_chart_basic.png)|
- |[Single line chart](https://github.com/valeria-io/bokeh-dataviz-catalogue/tree/master/line_plot)||
+ |[**Single line chart**](https://github.com/valeria-io/bokeh-dataviz-catalogue/tree/master/line_plot)||
  |![line_chart_text](static/images/single_line_chart_homepage.png)||   
  
 ## Contact
