@@ -64,9 +64,9 @@ deeporange, brown, grey, bluegrey
 In [this link](https://material-ui.com/customization/color/#color-palette) you can see each shade and its respective 
 colour code. 
 
-_Find in this [link](https://bokeh.pydata.org/en/latest/docs/reference/models/formatters.html#bokeh.models.formatters.NumeralTickFormatter) 
+Find in [this link](https://bokeh.pydata.org/en/latest/docs/reference/models/formatters.html#bokeh.models.formatters.NumeralTickFormatter) 
 the different numerical formats you can use for `y_num_tick_formatter` and `bar_tooltip_format` 
-(this last one needs to be in brackets, e.g: `{0 %}`)_
+(this last one needs to be in brackets, e.g: `{0 %}`).
 
 _To observe the hover functionality, download the HTML page and open in your browser._
 

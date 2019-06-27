@@ -61,9 +61,9 @@ plot_multiple_bar_chart(
     show_legend=True #bool
 )
 ```
-_Find in this [link](https://bokeh.pydata.org/en/latest/docs/reference/models/formatters.html#bokeh.models.formatters.NumeralTickFormatter) 
+Find in [this link](https://bokeh.pydata.org/en/latest/docs/reference/models/formatters.html#bokeh.models.formatters.NumeralTickFormatter) 
 the different numerical formats you can use for `y_num_tick_formatter` and `bar_tooltip_format` 
-(this last one needs to be in brackets, e.g: `{0 %}`)_
+(this last one needs to be in brackets, e.g: `{0 %}`).
 
 The `md_color_shade` is a one of the following colour names used in [Material Design](https://material-ui.com/customization/color/#color-palette):
 - red, pink, purple, deeppurple, indigo, blue, lightblue, cyan, teal, green, lightgreen, lime, yellow, amber, orange, 
