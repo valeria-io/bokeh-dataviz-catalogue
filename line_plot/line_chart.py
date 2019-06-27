@@ -1,7 +1,9 @@
 import pandas as pd
-from plot_functions import plot_single_line
-from bokeh.layouts import Column, layout
+from plot_functions import plot_single_line, plot_table
+from bokeh.layouts import Column, Row, layout
 from bokeh.plotting import output_file, show
+from bokeh.models.widgets import Div
+
 
 df = pd.read_csv('../static/data/daily_sales.csv')
 df['date'] = pd.to_datetime(df['date'])
@@ -32,6 +34,28 @@ p_optional = plot_single_line(
     x_axis_label=''
 )
 
-show(
-    layout(Column(p_mandatory, p_optional))
+data_table = plot_table(df)
+
+text_mandatory = Div(
+    text="""
+    <h2 style='margin-block-end:0'> Graph 1: Using mandatory parameters only </h2>
+    """
 )
+text_optional= Div(
+    text="""
+    <h2 style='margin-block-end:0'> Graph 2: Using additional and optional function parameters </h2>
+    """
+)
+text_table = Div(
+    text="""
+    <h2 style='margin-block-end:0'> Data used in graph</h2>
+    <span style='color: #616161'><i>Scrollable table</i></span>
+    """
+)
+# show(
+#     layout(
+#         Row(Column(text_mandatory, p_mandatory, text_optional, p_optional, text_table, data_table)),
+#         )
+# )
+from tabulate import tabulate
+print(tabulate(df.sort_values('date'), tablefmt="github", headers="keys", showindex=False))
