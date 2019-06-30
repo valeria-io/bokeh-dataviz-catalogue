@@ -34,6 +34,7 @@ p_optional = plot_single_line(
     x_axis_label=''
 )
 
+df['date'] = pd.to_datetime(df['date']).astype(str)
 data_table = plot_table(df)
 
 text_mandatory = Div(
@@ -52,10 +53,8 @@ text_table = Div(
     <span style='color: #616161'><i>Scrollable table</i></span>
     """
 )
-# show(
-#     layout(
-#         Row(Column(text_mandatory, p_mandatory, text_optional, p_optional, text_table, data_table)),
-#         )
-# )
-from tabulate import tabulate
-print(tabulate(df.sort_values('date'), tablefmt="github", headers="keys", showindex=False))
+show(
+    layout(
+        Row(Column(text_mandatory, p_mandatory, text_optional, p_optional, text_table, data_table)),
+        )
+)
