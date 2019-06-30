@@ -58,11 +58,10 @@ def plot_dual_axis_dual_bar_line(
     groups = df[groups_name].unique()
     index_tuple = [(group_, bar_variable) for group_ in groups for bar_variable in bar_variables]
 
-    """ Prepares hover tools"""
+    """ figure"""
     hover_bar = HoverTool(names=['hover_info'])
     hover_line = HoverTool(names=['line_info'])
 
-    """ Prepares graph's settings """
     p = figure(
         x_range=FactorRange(*index_tuple),
         plot_height=kwargs.get('plot_height', 400),
@@ -70,7 +69,7 @@ def plot_dual_axis_dual_bar_line(
         title=title,
         tools=["save", hover_bar, hover_line])
 
-    """ Creates multiple bar chart """
+    """ multiple bar chart """
     bar_colours = kwargs.get('bar_colours', ["#8c9eff", "#536dfe"])
     colours = bar_colours * len(groups)
 
@@ -91,7 +90,7 @@ def plot_dual_axis_dual_bar_line(
         name='hover_info'
     )
 
-    """ Creates line chart """
+    """ line chart """
     source_lines = ColumnDataSource(
         data=dict(
             x=list(groups),
@@ -119,7 +118,7 @@ def plot_dual_axis_dual_bar_line(
         name='line_info'
     )
 
-    """ Sets left axis """
+    """ left axis """
     min_bar_value = df0[bar_value_name].min()
     max_bar_value = df1[bar_value_name].max()
 
@@ -131,7 +130,7 @@ def plot_dual_axis_dual_bar_line(
     left_axis_y_label = kwargs.get('left_axis_y_label', bar_value_name)
     p.yaxis.axis_label = left_axis_y_label
 
-    """ Sets right axis """
+    """ right axis """
     min_line_value = df[line_variable_name].min()
     max_line_value = df[line_variable_name].max()
 
@@ -143,11 +142,10 @@ def plot_dual_axis_dual_bar_line(
     }
     p.add_layout(LinearAxis(y_range_name=right_axis_y_label, axis_label=right_axis_y_label), 'right')
 
-    """ Formats rest of graph"""
     p = format_axis(p, **kwargs)
     p = format_grid(p, **kwargs)
 
-    """ Assigns tooltips """
+    """ hover tooltips """
     tooltips_bar = [
         (kwargs.get('x_tooltip_name', 'Group'), '@x'),
         (kwargs.get('bar_tooltip_name', left_axis_y_label),
@@ -166,7 +164,7 @@ def plot_dual_axis_dual_bar_line(
     hover_line.tooltips = get_custom_hover_tooltips(tooltips_line)
     p.add_tools(hover_line)
 
-    """ Adds legend"""
+    """ legend"""
     legend = Legend(items=[
         LegendItem(label=left_axis_y_label + ': ' + bar_variables[0], renderers=[bar_chart], index=0),
         LegendItem(label=left_axis_y_label + ': ' + bar_variables[1], renderers=[bar_chart], index=1),
@@ -241,7 +239,7 @@ def plot_multiple_bar_chart(df: pd.DataFrame, title: str, x_axis: str, y_axis: s
         line_color="white",
     )
 
-    """ tooltips """
+    """ hover tooltips """
     tooltips = [
         ('{},{}'.format(x_axis, x_axis_categories), "@x" + kwargs.get('x_tooltip_format', '')),
         (y_axis, "@y" + kwargs.get('y_tooltip_format', ''))
@@ -316,7 +314,7 @@ def plot_single_line(df: pd.DataFrame, x_axis: str, y_axis: str, title: str, x_a
 
     line_chart = p.line(x_axis, y_axis, line_width=kwargs.get('line_width', 1), color=line_colour, source=source)
 
-    """ tooltips """
+    """ hover tooltips """
     x_axis_default_format = "{%F, %A}" if x_axis_type == 'datetime' else ''
     tooltips = [(x_axis, "@" + x_axis + kwargs.get('x_tooltip_format', x_axis_default_format)),
                 (y_axis, "@" + y_axis + kwargs.get('y_tooltip_format', '{0,0}'))]
@@ -342,69 +340,71 @@ def plot_single_line(df: pd.DataFrame, x_axis: str, y_axis: str, title: str, x_a
     return p
 
 
-# def plot_multiple_lines(df, x_axis, y_axis, category_column, title, x_axis_type='datetime', plot_width=1000,
-#                         plot_height=500, line_width=2, colours=create_multi_colour_pallete(), line_alpha=1, **kwargs):
-#     """Plots multiple lines.
-#
-#     Args:
-#         df (pd.DataFrame) -- dataframe to use
-#         x_axis (str) -- x axis of plot
-#         y_axis (str) -- y axis of plot
-#         x_axis_type (str) --  The type of the x-axis: datetime, linear, log, auto (default datetime)
-#         category column (str) -- column used to get the categories for multiple lines
-#         title (str) -- title used for the plot
-#         plot_width (int) -- width of plot (default 1000)
-#         plot_height (int) -- height of plot (default 500)
-#         line_width (int) -- width of lines (default 2)
-#
-#     Returns:
-#         bokeh plot figure
-#     """
+def plot_multiple_lines(df: pd.DataFrame, title: str, x_axis: str, y_axis: str, category_column: str,
+                        x_axis_type: str = 'datetime', **kwargs):
+    """
+    Cretes plot with multiple lines
+    :param df:
+    :param title:
+    :param x_axis:
+    :param y_axis:
+    :param category_column:
+    :param x_axis_type:
+    :param kwargs:
+    :return:
+    """
 
-    custom_hover = HoverTool()
-
-    custom_hover.tooltips = get_custom_hover_tooltips()
-
+    """ prepare data """
     if (x_axis in df.index.names) | (y_axis in df.index.names):
         df.reset_index(inplace=True)
-
-    if len(colours) < len(df[category_column].unique()):
-        raise IndexError("""There are more categorical ({} categoreis) columns than there are colours ({} colours). 
-                            Reduce categories or add more colours.""".format(str(len(df[category_column].unique())),
-                                                                             str(len(colours))))
 
     df[category_column] = df[category_column].apply(str)
     df_pivoted = df.pivot(index=x_axis, columns=category_column, values=y_axis)
 
-    p = figure(x_axis_type=x_axis_type, title=title, plot_width=plot_width, plot_height=plot_height,
-               tools=[custom_hover, 'save'])
+    """ Multiple line chart """
+    custom_hover = HoverTool()
+    p = figure(x_axis_type=x_axis_type, title=title, plot_width=kwargs.get('plot_width', 800),
+               plot_height=kwargs.get('plot_height', 400), tools=[custom_hover, 'save'])
 
     legend_list = []
 
     source = ColumnDataSource(df_pivoted)
 
+    colours = create_multi_colour_pallete()
+    if len(colours) < len(df[category_column].unique()):
+        raise IndexError("""There are more categorical ({} categories) columns than there are colours ({} colours). 
+                                Reduce categories or add more colours.""".format(str(len(df[category_column].unique())),
+                                                                                 str(len(colours))))
+
     for ind, category_line in enumerate(df_pivoted.columns):
-        line_g = p.line(x_axis, category_line, source=source, line_width=line_width, color=colours[ind],
-                        line_alpha=line_alpha)
-        legend_list.append(LegendItem(label=category_line, renderers=[line_g]))
+        line_g = p.line(
+            x_axis,
+            category_line,
+            line_width=kwargs.get('line_width', 1),
+            color=colours[ind],
+            line_alpha=kwargs.get('line_alpha', 0.9),
+            source=source
+        )
+        legend_list.append(LegendItem(label=category_line, renderers=[line_g], index=ind))
 
+    """ hover tooltips """
     x_axis_default_format = '{%F, %A}' if x_axis_type == 'datetime' else ''
+    tooltips = [(x_axis, "@" + x_axis + kwargs.get('x_tooltip_format', x_axis_default_format))] + \
+               [("{} of {} {}".format(y_axis, category_column, y),
+                 "@" + y + kwargs.get('y_tooltip_format', '{0,0}')) for y in df_pivoted.columns]
 
-    tooltips = [(x_axis, "@" + x_axis + kwargs.get('x_tooltip_format',
-                                                   x_axis_default_format))] + [("{} of {} {}"
-                                                                                .format(y_axis, category_column, y),
-                                                                                "@" + y + kwargs.
-                                                                                get('y_tooltip_format', '{0,0}'))
-                                                                               for y in df_pivoted.columns]
-    hover = p.select(dict(type=HoverTool))
-    hover.tooltips = tooltips
-    hover.formatters = {x_axis: x_axis_type}
+    custom_hover.tooltips = get_custom_hover_tooltips(tooltips)
+    custom_hover.formatters = {x_axis: x_axis_type}
 
-    p.yaxis.formatter = NumeralTickFormatter(format=kwargs.get('y_axis_format', "0.0a"))
+    """ legend """
+    legend = Legend(items=legend_list, location=kwargs.get('legend_location', (10, 10)))
+    p.add_layout(legend, kwargs.get('legend_placement', 'right'))
 
-    legend = Legend(items=legend_list, location=(0, -30))
-
-    p.add_layout(legend, 'right')
+    """ axis """
+    p.xaxis.axis_label = kwargs.get('x_axis_label', x_axis)
+    p.yaxis.axis_label = kwargs.get('y_axis_label', y_axis)
+    p = format_axis(p, **kwargs)
+    p = format_grid(p, **kwargs)
     return p
 
 
@@ -420,12 +420,13 @@ def format_grid(p: figure, **kwargs) -> figure:
     return p
 
 
+# .bk-tooltip>div:not(:first-child) {display:none;}
 def get_custom_hover_tooltips(tooltips: list) -> str:
     """ Function that forces only one hover tooltip to show at a time"""
     html_code = \
         """
         <style>
-            .bk-tooltip>div:not(:first-child) {display:none;}
+            .bk-tooltip:not(:first-child) ~ .bk-tooltip {display:none}
         </style>
         """
     for tooltip in tooltips:
