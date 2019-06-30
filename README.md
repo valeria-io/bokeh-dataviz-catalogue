@@ -1,8 +1,10 @@
-_This is a work in progress. More coming soon :) _
+**This is a work in progress. More coming soon :)**
 
 # Bokeh Data Viz Catalogue
+This is a collection of Bokeh functions to create interactive data visualisations with large datasets from Python.
 
-You can copy-paste the file `plot_functions.py` into your project to import and use any of the existing plotting functions.
+You can copy-paste the file `plot_functions.py` into your project to import and use any of the existing plotting 
+functions.
 
 ## Instructions
 
