@@ -1,3 +1,5 @@
+_This is a work in progress. More coming soon :) _
+
 # Bokeh Data Viz Catalogue
 
 You can copy-paste the file `plot_functions.py` into your project to import and use any of the existing plotting functions.
