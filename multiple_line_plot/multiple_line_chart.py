@@ -6,7 +6,7 @@ from bokeh.models.widgets import Div
 
 
 df = pd.read_csv('../static/data/daily_sales_by_store.csv')
-df = df[df['store']<6]
+df = df[df['store'] < 6]
 df['date'] = pd.to_datetime(df['date'])
 
 output_file("multiple_line_chart.html")
@@ -26,8 +26,6 @@ p_optional = plot_multiple_lines(
     category_column='store',
     title='Total sales',
     show_legend=True,
-    colour_name='amber',
-    colour_code='600',
     plot_width=900,
     plot_height=450,
     legend_placement='right',
@@ -37,7 +35,7 @@ p_optional = plot_multiple_lines(
     y_axis_label='Total Sales by Store',
     x_axis_label=''
 )
-
+df['date'] = pd.to_datetime(df['date']).astype(str)
 data_table = plot_table(df)
 
 text_mandatory = Div(
@@ -61,5 +59,3 @@ show(
         Row(Column(text_mandatory, p_mandatory, text_optional, p_optional, text_table, data_table)),
         )
 )
-# from tabulate import tabulate
-# print(tabulate(df.sort_values('date'), tablefmt="github", headers="keys", showindex=False))
